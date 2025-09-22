@@ -1,12 +1,46 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Settings as SettingsIcon, Bell, Shield, Database } from "lucide-react";
+import { Settings as SettingsIcon, Bell, Shield, Bot, Save } from "lucide-react";
+import { getLindyConfig, saveLindyConfig, type LindyConfig } from "@/lib/lindy-api";
+import { useToast } from "@/hooks/use-toast";
 
 const Settings = () => {
+  const { toast } = useToast();
+  const [lindyConfig, setLindyConfig] = useState<LindyConfig>({
+    agentId: '',
+    webhookUrl: '',
+    apiKey: ''
+  });
+
+  useEffect(() => {
+    const config = getLindyConfig();
+    if (config) {
+      setLindyConfig(config);
+    }
+  }, []);
+
+  const handleSaveLindyConfig = () => {
+    if (!lindyConfig.agentId || !lindyConfig.webhookUrl) {
+      toast({
+        title: "Validation Error",
+        description: "Please provide both Agent ID and Webhook URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    saveLindyConfig(lindyConfig);
+    toast({
+      title: "Configuration Saved",
+      description: "Lindy agent configuration has been saved successfully",
+    });
+  };
+
   return (
     <div className="p-6 space-y-6">
       <div className="border-b border-border pb-4">
@@ -18,34 +52,58 @@ const Settings = () => {
       </div>
 
       <div className="grid gap-6">
-        {/* AI Agent Configuration */}
+        {/* Lindy AI Configuration */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Database className="h-5 w-5" />
-              AI Agent Configuration
+              <Bot className="h-5 w-5" />
+              Lindy AI Agent Configuration
             </CardTitle>
             <CardDescription>
-              Customize your AI agent's behavior and responses
+              Connect your Lindy AI agent to enable real conversations
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
-              <Label htmlFor="agent-name">Agent Name</Label>
-              <Input id="agent-name" placeholder="Business Assistant" />
+              <Label htmlFor="agent-id">Lindy Agent ID</Label>
+              <Input 
+                id="agent-id" 
+                placeholder="Enter your Lindy agent ID" 
+                value={lindyConfig.agentId}
+                onChange={(e) => setLindyConfig(prev => ({ ...prev, agentId: e.target.value }))}
+              />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="response-tone">Response Tone</Label>
-              <Input id="response-tone" placeholder="Professional, friendly, helpful" />
+              <Label htmlFor="webhook-url">Webhook URL</Label>
+              <Input 
+                id="webhook-url" 
+                placeholder="https://your-lindy-webhook-url.com" 
+                value={lindyConfig.webhookUrl}
+                onChange={(e) => setLindyConfig(prev => ({ ...prev, webhookUrl: e.target.value }))}
+              />
             </div>
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Enable Auto-Responses</Label>
-                <p className="text-sm text-muted-foreground">
-                  Automatically respond to common queries
-                </p>
-              </div>
-              <Switch defaultChecked />
+            <div className="grid gap-2">
+              <Label htmlFor="api-key">API Key (Optional)</Label>
+              <Input 
+                id="api-key" 
+                type="password"
+                placeholder="Enter API key if required" 
+                value={lindyConfig.apiKey}
+                onChange={(e) => setLindyConfig(prev => ({ ...prev, apiKey: e.target.value }))}
+              />
+            </div>
+            <Button onClick={handleSaveLindyConfig} className="bg-gradient-primary hover:opacity-90">
+              <Save className="mr-2 h-4 w-4" />
+              Save Lindy Configuration
+            </Button>
+            <div className="text-sm text-muted-foreground">
+              <p>To get your Lindy webhook URL:</p>
+              <ol className="list-decimal list-inside mt-2 space-y-1">
+                <li>Go to your Lindy dashboard</li>
+                <li>Create or select your agent</li>
+                <li>Add a webhook trigger</li>
+                <li>Copy the webhook URL and paste it above</li>
+              </ol>
             </div>
           </CardContent>
         </Card>
@@ -106,20 +164,22 @@ const Settings = () => {
               <Switch defaultChecked disabled />
             </div>
             <Separator />
-            <div className="grid gap-2">
-              <Label htmlFor="api-key">API Key</Label>
-              <Input id="api-key" type="password" placeholder="••••••••••••••••" />
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label>Store Conversation History</Label>
+                <p className="text-sm text-muted-foreground">
+                  Keep chat history for analytics
+                </p>
+              </div>
+              <Switch defaultChecked />
             </div>
-            <Button variant="outline" size="sm">
-              Regenerate API Key
-            </Button>
           </CardContent>
         </Card>
       </div>
 
       <div className="flex justify-end gap-2">
         <Button variant="outline">Cancel</Button>
-        <Button className="bg-gradient-primary hover:opacity-90">Save Changes</Button>
+        <Button className="bg-gradient-primary hover:opacity-90">Save All Changes</Button>
       </div>
     </div>
   );
