@@ -22,6 +22,8 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          light: "hsl(var(--primary-light))",
+          dark: "hsl(var(--primary-dark))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -57,6 +59,30 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        chat: {
+          "bubble-user": "hsl(var(--chat-bubble-user))",
+          "bubble-user-foreground": "hsl(var(--chat-bubble-user-foreground))",
+          "bubble-bot": "hsl(var(--chat-bubble-bot))",
+          "bubble-bot-foreground": "hsl(var(--chat-bubble-bot-foreground))",
+        },
+        metric: {
+          positive: "hsl(var(--metric-positive))",
+          negative: "hsl(var(--metric-negative))",
+          neutral: "hsl(var(--metric-neutral))",
+        },
+      },
+      backgroundImage: {
+        "gradient-primary": "var(--gradient-primary)",
+        "gradient-accent": "var(--gradient-accent)",
+        "gradient-success": "var(--gradient-success)",
       },
       borderRadius: {
         lg: "var(--radius)",
