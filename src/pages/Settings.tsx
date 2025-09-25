@@ -6,38 +6,38 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Settings as SettingsIcon, Bell, Shield, Bot, Save } from "lucide-react";
-import { getLindyConfig, saveLindyConfig, type LindyConfig } from "@/lib/lindy-api";
+import { getActivePiecesConfig, saveActivePiecesConfig, type ActivePiecesConfig } from "@/lib/activepieces-api";
 import { useToast } from "@/hooks/use-toast";
 
 const Settings = () => {
   const { toast } = useToast();
-  const [lindyConfig, setLindyConfig] = useState<LindyConfig>({
-    agentId: '',
-    webhookUrl: '',
+  const [activePiecesConfig, setActivePiecesConfig] = useState<ActivePiecesConfig>({
+    flowId: '',
+    webhookUrl: 'https://cloud.activepieces.com/api/v1/webhooks/X8zPEyyMMX30dWQZGA63h',
     apiKey: ''
   });
 
   useEffect(() => {
-    const config = getLindyConfig();
+    const config = getActivePiecesConfig();
     if (config) {
-      setLindyConfig(config);
+      setActivePiecesConfig(config);
     }
   }, []);
 
-  const handleSaveLindyConfig = () => {
-    if (!lindyConfig.agentId || !lindyConfig.webhookUrl) {
+  const handleSaveActivePiecesConfig = () => {
+    if (!activePiecesConfig.flowId || !activePiecesConfig.webhookUrl) {
       toast({
         title: "Validation Error",
-        description: "Please provide both Agent ID and Webhook URL",
+        description: "Please provide both Flow ID and Webhook URL",
         variant: "destructive",
       });
       return;
     }
 
-    saveLindyConfig(lindyConfig);
+    saveActivePiecesConfig(activePiecesConfig);
     toast({
       title: "Configuration Saved",
-      description: "Lindy agent configuration has been saved successfully",
+      description: "Active Pieces flow configuration has been saved successfully",
     });
   };
 
@@ -52,34 +52,34 @@ const Settings = () => {
       </div>
 
       <div className="grid gap-6">
-        {/* Lindy AI Configuration */}
+        {/* Active Pieces Configuration */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
-              Lindy AI Agent Configuration
+              Active Pieces Flow Configuration
             </CardTitle>
             <CardDescription>
-              Connect your Lindy AI agent to enable real conversations
+              Connect your Active Pieces flow to enable real conversations
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
-              <Label htmlFor="agent-id">Lindy Agent ID</Label>
+              <Label htmlFor="flow-id">Flow ID</Label>
               <Input 
-                id="agent-id" 
-                placeholder="Enter your Lindy agent ID" 
-                value={lindyConfig.agentId}
-                onChange={(e) => setLindyConfig(prev => ({ ...prev, agentId: e.target.value }))}
+                id="flow-id" 
+                placeholder="Enter your Active Pieces flow ID" 
+                value={activePiecesConfig.flowId}
+                onChange={(e) => setActivePiecesConfig(prev => ({ ...prev, flowId: e.target.value }))}
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="webhook-url">Webhook URL</Label>
               <Input 
                 id="webhook-url" 
-                placeholder="https://your-lindy-webhook-url.com" 
-                value={lindyConfig.webhookUrl}
-                onChange={(e) => setLindyConfig(prev => ({ ...prev, webhookUrl: e.target.value }))}
+                placeholder="https://cloud.activepieces.com/api/v1/webhooks/..." 
+                value={activePiecesConfig.webhookUrl}
+                onChange={(e) => setActivePiecesConfig(prev => ({ ...prev, webhookUrl: e.target.value }))}
               />
             </div>
             <div className="grid gap-2">
@@ -88,19 +88,19 @@ const Settings = () => {
                 id="api-key" 
                 type="password"
                 placeholder="Enter API key if required" 
-                value={lindyConfig.apiKey}
-                onChange={(e) => setLindyConfig(prev => ({ ...prev, apiKey: e.target.value }))}
+                value={activePiecesConfig.apiKey}
+                onChange={(e) => setActivePiecesConfig(prev => ({ ...prev, apiKey: e.target.value }))}
               />
             </div>
-            <Button onClick={handleSaveLindyConfig} className="bg-gradient-primary hover:opacity-90">
+            <Button onClick={handleSaveActivePiecesConfig} className="bg-gradient-primary hover:opacity-90">
               <Save className="mr-2 h-4 w-4" />
-              Save Lindy Configuration
+              Save Active Pieces Configuration
             </Button>
             <div className="text-sm text-muted-foreground">
-              <p>To get your Lindy webhook URL:</p>
+              <p>To get your Active Pieces webhook URL:</p>
               <ol className="list-decimal list-inside mt-2 space-y-1">
-                <li>Go to your Lindy dashboard</li>
-                <li>Create or select your agent</li>
+                <li>Go to your Active Pieces dashboard</li>
+                <li>Create or select your flow</li>
                 <li>Add a webhook trigger</li>
                 <li>Copy the webhook URL and paste it above</li>
               </ol>
