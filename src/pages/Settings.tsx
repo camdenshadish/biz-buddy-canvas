@@ -25,10 +25,10 @@ const Settings = () => {
   }, []);
 
   const handleSaveActivePiecesConfig = () => {
-    if (!activePiecesConfig.flowId || !activePiecesConfig.webhookUrl) {
+    if (!activePiecesConfig.webhookUrl) {
       toast({
         title: "Validation Error",
-        description: "Please provide both Flow ID and Webhook URL",
+        description: "Please provide the Webhook URL",
         variant: "destructive",
       });
       return;
@@ -65,11 +65,11 @@ const Settings = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
-              <Label htmlFor="flow-id">Flow ID</Label>
+              <Label htmlFor="flow-id">Flow ID (Optional)</Label>
               <Input 
                 id="flow-id" 
-                placeholder="Enter your Active Pieces flow ID" 
-                value={activePiecesConfig.flowId}
+                placeholder="Enter your Active Pieces flow ID (optional)" 
+                value={activePiecesConfig.flowId || ''}
                 onChange={(e) => setActivePiecesConfig(prev => ({ ...prev, flowId: e.target.value }))}
               />
             </div>

@@ -1,6 +1,6 @@
 // Active Pieces Integration API utilities
 export interface ActivePiecesConfig {
-  flowId: string;
+  flowId?: string;
   webhookUrl: string;
   apiKey?: string;
 }
@@ -47,7 +47,7 @@ export const sendMessageToActivePieces = async (message: ActivePiecesMessage): P
         text: message.message,
         conversation_id: message.conversation_id,
         user_id: message.user_id || 'anonymous',
-        flow_id: config.flowId
+        ...(config.flowId && { flow_id: config.flowId })
       }),
     });
 
